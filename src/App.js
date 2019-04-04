@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
+import ReactGA from 'react-ga';
 
 const styles = theme => ({
   container: {
@@ -29,21 +30,44 @@ class App extends Component {
       this.setState({ [name]: event.target.value });
     };
 
-
     constructor(props) {
         super(props);
         this.state = {
           inputValue: 0,
           values: [
-            ["Carro popular", 3],
+            ["Carro popular", 28233.00],
             ["Campo de Futebol", 33494],
             ["Viagem de ida e volta até a Lua", 320000000],
             ["Fiat Uno 1.0 2000", 6800],
             ["Ingresso do rock in rio", 495],
-            ["Passage aérea RJ -> SP", 183],
+            ["Passagem aérea RJ -> SP", 183],
+            ["Noites no DIDGE", 270],
             ["Salario do Neymar", 821000000]
           ],
         };
+        this.initializeReactGA();
+  }
+
+  initializeReactGA() {
+    ReactGA.initialize('UA-137801796-1');
+    ReactGA.pageview('/');
+  }
+
+  decimalFixedValue(value) {
+    if (Number.isInteger(value)) {
+      return value.toFixed(0)
+    }
+
+    var match = (''+value).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+    if (!match) { return 0; }
+    var places=  Math.max(
+                         0,
+                         // Number of digits right of decimal point.
+                         (match[1] ? match[1].length : 0)
+                         // Adjust for scientific notation.
+                         - (match[2] ? +match[2] : 0));
+
+    return value.toFixed(places)
   }
 
   renderItems() {
@@ -54,9 +78,10 @@ class App extends Component {
       return
     } else {
       return (
-          values.map(item =>
-            <div>
-              <strong>{item[0]}</strong>: {inputValue/item[1]}
+          values.sort((a, b) => (a[1] > b[1]) ? 1 : -1)
+          .map(item =>
+            <div style={{marginTop: '20px', marginLeft: '20px'}}>
+              <strong>{item[0]}</strong>: {this.decimalFixedValue(inputValue/item[1])}
               <Divider light />
             </div>
           )
@@ -76,7 +101,7 @@ class App extends Component {
         </h1>
           <TextField
             id="standard-number"
-            label="Valor"
+            label="Valor em R$"
             value={inputValue}
             onChange={this.handleChange('inputValue')}
             type="number"
