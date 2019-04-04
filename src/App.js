@@ -41,7 +41,10 @@ class App extends Component {
             ["Fiat Uno 1.0 2000", 6800],
             ["Ingresso do rock in rio", 495],
             ["Passagem aérea RJ -> SP", 183],
-            ["Noites no DIDGE", 270],
+            ["Noite no DIDGE", 270],
+            ["Salário mímino", 998],
+            ["Passe de ônibus em Floripa", 4.40],
+            ["Tesla X básico", 103643.34],
             ["Salario do Neymar", 821000000]
           ],
         };
